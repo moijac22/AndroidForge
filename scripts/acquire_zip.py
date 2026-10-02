@@ -35,10 +35,17 @@ INPUT_DIR = REPO_ROOT / "input"
 def find_input_zip() -> Path | None:
     if not INPUT_DIR.exists():
         return None
-    for p in INPUT_DIR.iterdir():
-        if p.is_file() and p.suffix.lower() == ".zip":
-            return p
-    return None
+
+    zips = [
+        p for p in INPUT_DIR.iterdir()
+        if p.is_file() and p.suffix.lower() == ".zip"
+    ]
+
+    if not zips:
+        return None
+
+    # Utilise le ZIP le plus récemment ajouté/modifié.
+    return max(zips, key=lambda p: p.stat().st_mtime)
 
 
 def download(url: str, dest: Path) -> None:
