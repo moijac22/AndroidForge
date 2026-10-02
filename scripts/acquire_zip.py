@@ -31,7 +31,6 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INPUT_DIR = REPO_ROOT / "input"
 
-
 def find_input_zip() -> Path | None:
     if not INPUT_DIR.exists():
         return None
@@ -44,9 +43,16 @@ def find_input_zip() -> Path | None:
     if not zips:
         return None
 
-    # Les uploads de l'interface AndroidForge sont nommés :
-    # web-build-<timestamp>-<nom>.zip
-    # On sélectionne celui dont le timestamp est le plus élevé.
+    # Priorité au projet ChronoVitesse.
+    chrono = [
+        p for p in zips
+        if "ChronoVitesse" in p.name
+    ]
+
+    if chrono:
+        return max(chrono, key=lambda p: p.stat().st_mtime)
+
+    # Sinon, utiliser le dernier upload web-build.
     import re
 
     def upload_number(p: Path) -> int:
@@ -58,8 +64,8 @@ def find_input_zip() -> Path | None:
     if web_builds:
         return max(web_builds, key=upload_number)
 
-    # Si aucun upload web n'est présent, utiliser le premier ZIP.
     return zips[0]
+
 
 
 def download(url: str, dest: Path) -> None:
