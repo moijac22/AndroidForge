@@ -186,8 +186,13 @@ def parse_gradle_wrapper(root: Path) -> dict[str, Any]:
     gradlew = root / "gradlew"
     gradlew_bat = root / "gradlew.bat"
     wrapper_jar = root / "gradle" / "wrapper" / "gradle-wrapper.jar"
+print(f"DEBUG wrapper root: {root}")
+print(f"DEBUG gradlew exists: {gradlew.exists()}")
+print(f"DEBUG properties exists: {props.exists()}")
+print(f"DEBUG wrapper jar exists: {wrapper_jar.exists()}")
+print(f"DEBUG wrapper jar path: {wrapper_jar}")
 
-    if gradlew.exists() or gradlew_bat.exists() or props.exists():
+if gradlew.exists() or gradlew_bat.exists() or props.exists():
         result["present"] = True
     if props.exists():
         result["present"] = True
