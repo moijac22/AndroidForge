@@ -44,8 +44,22 @@ def find_input_zip() -> Path | None:
     if not zips:
         return None
 
-    # Utilise le ZIP le plus récemment ajouté/modifié.
-    return max(zips, key=lambda p: p.stat().st_mtime)
+    # Les uploads de l'interface AndroidForge sont nommés :
+    # web-build-<timestamp>-<nom>.zip
+    # On sélectionne celui dont le timestamp est le plus élevé.
+    import re
+
+    def upload_number(p: Path) -> int:
+        match = re.match(r"web-build-(\d+)-", p.name)
+        return int(match.group(1)) if match else -1
+
+    web_builds = [p for p in zips if upload_number(p) >= 0]
+
+    if web_builds:
+        return max(web_builds, key=upload_number)
+
+    # Si aucun upload web n'est présent, utiliser le premier ZIP.
+    return zips[0]
 
 
 def download(url: str, dest: Path) -> None:
