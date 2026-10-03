@@ -124,6 +124,10 @@ jobs:
         id: extract
         run: python scripts/extract_zip.py --zip "${{ steps.acquire.outputs.zip_path }}"
       - name: Debug extracted Gradle wrapper
+      - name: Debug ZIP SHA256
+        run: |
+          echo "=== SHA256 du ZIP utilisé par GitHub ==="
+          sha256sum "${{ steps.acquire.outputs.zip_path }}"      
         run: |
           echo "=== Contenu du dossier gradle ==="
           find "${{ steps.extract.outputs.project_root }}/gradle" -maxdepth 3 -type f -print 2>/dev/null || true
