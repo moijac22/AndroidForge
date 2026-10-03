@@ -113,7 +113,10 @@ jobs:
             --source "${{ inputs.zip_source || 'input-directory' }}" \
             --url "${{ inputs.zip_url }}" \
             --tag "${{ inputs.release_tag }}"
-
+      - name: Debug ZIP Gradle wrapper
+        run: |
+          echo "=== Contenu du ZIP ==="
+          unzip -l "${{ steps.acquire.outputs.zip_path }}" | grep -E "gradle/wrapper|gradlew"
       # ---------------------------------------------------------------------
       # Step 2: Extract ZIP
       # ---------------------------------------------------------------------
