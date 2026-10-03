@@ -31,7 +31,8 @@ def extract(zip_path: Path, dest_dir: Path) -> Path:
         for m in zf.infolist():
             if not m.filename.startswith("__MACOSX") and "/.DS_Store" not in m.filename:
                 m.filename = m.filename.replace("\\", "/")
-                members.append(m)        zf.extractall(dest_dir, members=members)
+                members.append(m)        
+        zf.extractall(dest_dir, members=members)
         print("DEBUG wrapper:", (dest_dir / "gradle/wrapper/gradle-wrapper.jar").exists())
         print("DEBUG wrapper size:", (dest_dir / "gradle/wrapper/gradle-wrapper.jar").stat().st_size if (dest_dir / "gradle/wrapper/gradle-wrapper.jar").exists() else 0)
         print("DEBUG gradle names:", [repr(m.filename) for m in zf.infolist() if "gradle" in m.filename.lower()])
