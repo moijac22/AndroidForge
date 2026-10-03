@@ -120,7 +120,12 @@ jobs:
       - name: Extract source ZIP
         id: extract
         run: python scripts/extract_zip.py --zip "${{ steps.acquire.outputs.zip_path }}"
-
+      - name: Debug extracted Gradle wrapper
+        run: |
+          echo "=== Contenu du dossier gradle ==="
+          find "${{ steps.extract.outputs.project_root }}/gradle" -maxdepth 3 -type f -print 2>/dev/null || true
+          echo "=== Taille du gradle-wrapper.jar ==="
+          ls -l "${{ steps.extract.outputs.project_root }}/gradle/wrapper/gradle-wrapper.jar" 2>/dev/null || true
       # ---------------------------------------------------------------------
       # Step 3: Detect project (writes detection.json)
       # ---------------------------------------------------------------------
