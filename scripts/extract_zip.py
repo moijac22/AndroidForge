@@ -29,7 +29,9 @@ def extract(zip_path: Path, dest_dir: Path) -> Path:
         # Filter out __MACOSX entries
         members = [m for m in zf.infolist() if not m.filename.startswith("__MACOSX") and "/.DS_Store" not in m.filename]
         zf.extractall(dest_dir, members=members)
-
+        print("DEBUG wrapper:", (dest_dir / "gradle/wrapper/gradle-wrapper.jar").exists())
+        print("DEBUG wrapper size:", (dest_dir / "gradle/wrapper/gradle-wrapper.jar").stat().st_size if (dest_dir / "gradle/wrapper/gradle-wrapper.jar").exists() else 0)
+        print("DEBUG extracted files:", [m.filename for m in members if "gradle/wrapper" in m.filename])
     # Remove any leftover __MACOSX dirs on disk
     for macosx in dest_dir.rglob("__MACOSX"):
         if macosx.is_dir():
